@@ -3,6 +3,7 @@ package org.jhipster.health.web.rest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -22,6 +23,7 @@ import org.jhipster.health.IntegrationTest;
 import org.jhipster.health.domain.Points;
 import org.jhipster.health.repository.PointsRepository;
 import org.jhipster.health.repository.search.PointsSearchRepository;
+import org.jhipster.health.security.AuthoritiesConstants;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -199,6 +201,7 @@ class PointsResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = AuthoritiesConstants.ADMIN)
     void getAllPoints() throws Exception {
         // Initialize the database
         pointsRepository.saveAndFlush(points);

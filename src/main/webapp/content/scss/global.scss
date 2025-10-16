@@ -10,6 +10,7 @@ Bootstrap tweaks
 body {
   background-color: $body-bg;
   font-family: $font-family-sans-serif;
+  color: $white;
 }
 
 body,
@@ -18,16 +19,17 @@ h2,
 h3,
 h4 {
   font-weight: 300;
+  color: $white;
 }
 
 /* Increase contrast of links to get 100% on Lighthouse Accessability Audit. Override this color if you want to change the link color, or use a Bootswatch theme */
 a {
-  color: #533f03;
+  color: #e0cd94;
   font-weight: bold;
 }
 
 a:hover {
-  color: #533f03;
+  color: #e0cd94;
 }
 
 /* override hover color for dropdown-item forced by bootstrap to all a:not([href]):not([tabindex]) elements in _reboot.scss */

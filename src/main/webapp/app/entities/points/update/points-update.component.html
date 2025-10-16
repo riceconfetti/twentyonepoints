@@ -34,20 +34,24 @@
             </small>
           </div>
         </div>
-
-        <div class="row mb-3">
-          <label class="form-label" jhiTranslate="twentyonepointsApp.points.exercise" for="field_exercise">Exercise</label>
-          <input type="number" class="form-control" name="exercise" id="field_exercise" data-cy="exercise" formControlName="exercise" />
+        <div class="form-check">
+          <label class="form-check-label" jhiTranslate="twentyonepointsApp.points.exercise" for="field_exercise">Exercise</label>
+          <input
+            type="checkbox"
+            class="form-check-input"
+            name="exercise"
+            id="field_exercise"
+            data-cy="exercise"
+            formControlName="exercise"
+          />
         </div>
-
-        <div class="row mb-3">
-          <label class="form-label" jhiTranslate="twentyonepointsApp.points.meals" for="field_meals">Meals</label>
-          <input type="number" class="form-control" name="meals" id="field_meals" data-cy="meals" formControlName="meals" />
+        <div class="form-check">
+          <label class="form-check-label" jhiTranslate="twentyonepointsApp.points.meals" for="field_meals">Meals</label>
+          <input type="checkbox" class="form-check-input" name="meals" id="field_meals" data-cy="meals" formControlName="meals" />
         </div>
-
-        <div class="row mb-3">
-          <label class="form-label" jhiTranslate="twentyonepointsApp.points.alcohol" for="field_alcohol">Alcohol</label>
-          <input type="number" class="form-control" name="alcohol" id="field_alcohol" data-cy="alcohol" formControlName="alcohol" />
+        <div class="form-check mb-3">
+          <label class="form-check-label" jhiTranslate="twentyonepointsApp.points.alcohol" for="field_alcohol">Alcohol</label>
+          <input type="checkbox" class="form-check-input" name="alcohol" id="field_alcohol" data-cy="alcohol" formControlName="alcohol" />
         </div>
 
         <div class="row mb-3">
@@ -65,7 +69,7 @@
           </div>
         </div>
 
-        <div class="row mb-3">
+        <div class="row mb-3" *jhiHasAnyAuthority="'ROLE_ADMIN'">
           <label class="form-label" jhiTranslate="twentyonepointsApp.points.user" for="field_user">User</label>
           <select class="form-control" id="field_user" data-cy="user" name="user" formControlName="user" [compareWith]="compareUser">
             <option [ngValue]="null"></option>

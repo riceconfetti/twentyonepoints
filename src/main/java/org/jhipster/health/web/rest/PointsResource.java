@@ -13,7 +13,10 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.jhipster.health.domain.Points;
 import org.jhipster.health.repository.PointsRepository;
+import org.jhipster.health.repository.UserRepository;
 import org.jhipster.health.repository.search.PointsSearchRepository;
+import org.jhipster.health.security.AuthoritiesConstants;
+import org.jhipster.health.security.SecurityUtils;
 import org.jhipster.health.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,16 +52,21 @@ public class PointsResource {
 
     private final PointsSearchRepository pointsSearchRepository;
 
-    public PointsResource(PointsRepository pointsRepository, PointsSearchRepository pointsSearchRepository) {
+    private final UserRepository userRepository;
+
+    public PointsResource(PointsRepository pointsRepository, PointsSearchRepository pointsSearchRepository, UserRepository userRepository) {
         this.pointsRepository = pointsRepository;
         this.pointsSearchRepository = pointsSearchRepository;
+        this.userRepository = userRepository;
     }
 
     /**
      * {@code POST  /points} : Create a new points.
      *
      * @param points the points to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new points, or with status {@code 400 (Bad Request)} if the points has already an ID.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with
+     *         body the new points, or with status {@code 400 (Bad Request)} if the
+     *         points has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/points")
@@ -66,6 +74,11 @@ public class PointsResource {
         log.debug("REST request to save Points : {}", points);
         if (points.getId() != null) {
             throw new BadRequestAlertException("A new points cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+        if (!SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.ADMIN)) {
+            log.debug("No user passed in, using current user: {}", SecurityUtils.getCurrentUserLogin().get());
+            String username = SecurityUtils.getCurrentUserLogin().get();
+            points.setUser(userRepository.findOneByLogin(username).get());
         }
         Points result = pointsRepository.save(points);
         pointsSearchRepository.index(result);
@@ -78,11 +91,13 @@ public class PointsResource {
     /**
      * {@code PUT  /points/:id} : Updates an existing points.
      *
-     * @param id the id of the points to save.
+     * @param id     the id of the points to save.
      * @param points the points to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated points,
-     * or with status {@code 400 (Bad Request)} if the points is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the points couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the updated points,
+     *         or with status {@code 400 (Bad Request)} if the points is not valid,
+     *         or with status {@code 500 (Internal Server Error)} if the points
+     *         couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/points/{id}")
@@ -111,14 +126,17 @@ public class PointsResource {
     }
 
     /**
-     * {@code PATCH  /points/:id} : Partial updates given fields of an existing points, field will ignore if it is null
+     * {@code PATCH  /points/:id} : Partial updates given fields of an existing
+     * points, field will ignore if it is null
      *
-     * @param id the id of the points to save.
+     * @param id     the id of the points to save.
      * @param points the points to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated points,
-     * or with status {@code 400 (Bad Request)} if the points is not valid,
-     * or with status {@code 404 (Not Found)} if the points is not found,
-     * or with status {@code 500 (Internal Server Error)} if the points couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the updated points,
+     *         or with status {@code 400 (Bad Request)} if the points is not valid,
+     *         or with status {@code 404 (Not Found)} if the points is not found,
+     *         or with status {@code 500 (Internal Server Error)} if the points
+     *         couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/points/{id}", consumes = { "application/json", "application/merge-patch+json" })
@@ -175,9 +193,11 @@ public class PointsResource {
     /**
      * {@code GET  /points} : get all the points.
      *
-     * @param pageable the pagination information.
-     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of points in body.
+     * @param pageable  the pagination information.
+     * @param eagerload flag to eager load entities from relationships (This is
+     *                  applicable for many-to-many).
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list
+     *         of points in body.
      */
     @GetMapping("/points")
     public ResponseEntity<List<Points>> getAllPoints(
@@ -186,10 +206,10 @@ public class PointsResource {
     ) {
         log.debug("REST request to get a page of Points");
         Page<Points> page;
-        if (eagerload) {
-            page = pointsRepository.findAllWithEagerRelationships(pageable);
+        if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.ADMIN)) {
+            page = pointsRepository.findAllByOrderByDateDesc(pageable);
         } else {
-            page = pointsRepository.findAll(pageable);
+            page = pointsRepository.findByUserIsCurrentUser(pageable);
         }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
@@ -199,7 +219,8 @@ public class PointsResource {
      * {@code GET  /points/:id} : get the "id" points.
      *
      * @param id the id of the points to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the points, or with status {@code 404 (Not Found)}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body
+     *         the points, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/points/{id}")
     public ResponseEntity<Points> getPoints(@PathVariable Long id) {
@@ -226,10 +247,11 @@ public class PointsResource {
     }
 
     /**
-     * {@code SEARCH  /_search/points?query=:query} : search for the points corresponding
+     * {@code SEARCH  /_search/points?query=:query} : search for the points
+     * corresponding
      * to the query.
      *
-     * @param query the query of the points search.
+     * @param query    the query of the points search.
      * @param pageable the pagination information.
      * @return the result of the search.
      */
