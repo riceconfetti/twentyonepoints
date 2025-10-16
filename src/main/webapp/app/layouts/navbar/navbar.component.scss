@@ -1,3 +1,4 @@
+@use '@carbon/styles/scss/colors' as *;
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
 
@@ -7,7 +8,7 @@ Navbar
 
 .navbar-version {
   font-size: 0.65em;
-  color: $navbar-dark-color;
+  color: white;
 }
 
 .profile-image {
@@ -16,7 +17,16 @@ Navbar
 }
 
 .navbar {
-  padding: 0.2rem 1rem;
+  background: $gray-100;
+  border-bottom: 1px solid $gray-90;
+  padding: 0.5rem 1rem;
+  font-family: $font-family-sans-serif;
+  .navbar-brand {
+    padding-right: 1.5rem;
+  }
+  .navbar-title {
+    font-weight: 600;
+  }
 
   a.nav-link {
     font-weight: 400;

@@ -11,6 +11,9 @@ import { LoginService } from 'app/login/login.service';
 import { ProfileService } from 'app/layouts/profiles/profile.service';
 import { EntityNavbarItems } from 'app/entities/entity-navbar-items';
 
+//CARBON
+import { Header } from 'carbon-components-angular';
+
 @Component({
   selector: 'jhi-navbar',
   templateUrl: './navbar.component.html',

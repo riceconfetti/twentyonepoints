@@ -1,0 +1,27 @@
+{
+  "changelogDate": "20251015214629",
+  "fields": [
+    {
+      "fieldName": "timestamp",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "weight",
+      "fieldType": "Float"
+    }
+  ],
+  "name": "Weight",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityField": "login",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "weight",
+      "ownerSide": true,
+      "relationshipName": "user",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "no"
+}
