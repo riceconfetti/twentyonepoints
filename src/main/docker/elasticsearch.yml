@@ -1,7 +1,7 @@
 # This configuration is intended for development purpose, it's **your** responsibility to harden it for production
 services:
   twentyonepoints-elasticsearch:
-    image: elasticsearch:7.17.4
+    image: elasticsearch:7.17.26
     # volumes:
     #   - ~/volumes/jhipster/twentyonepoints/elasticsearch/:/usr/share/elasticsearch/data/
     # If you want to expose these ports outside your dev PC,

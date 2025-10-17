@@ -1,5 +1,6 @@
 package org.jhipster.health.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.jhipster.health.domain.Points;
@@ -42,4 +43,6 @@ public interface PointsRepository extends JpaRepository<Points, Long> {
 
     @Query("select points from Points points left join fetch points.user where points.id =:id")
     Optional<Points> findOneWithToOneRelationships(@Param("id") Long id);
+
+    List<Points> findAllByDateBetweenAndUserLogin(LocalDate firstDate, LocalDate secondDate, String login);
 }

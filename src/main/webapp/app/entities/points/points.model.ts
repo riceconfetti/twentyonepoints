@@ -11,4 +11,9 @@ export interface IPoints {
   user?: Pick<IUser, 'id' | 'login'> | null;
 }
 
+export interface IPointsPerWeek {
+  week?: dayjs.Dayjs;
+  points: number;
+}
+
 export type NewPoints = Omit<IPoints, 'id'> & { id: null };

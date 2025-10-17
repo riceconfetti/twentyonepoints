@@ -157,6 +157,16 @@ public class Points implements Serializable {
         return getClass().hashCode();
     }
 
+    public Points() {}
+
+    public Points(LocalDate date, Integer exercise, Integer meals, Integer alcohol, User user) {
+        this.date = date;
+        this.exercise = exercise;
+        this.meals = meals;
+        this.alcohol = alcohol;
+        this.user = user;
+    }
+
     // prettier-ignore
     @Override
     public String toString() {

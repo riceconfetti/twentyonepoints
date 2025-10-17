@@ -62,6 +62,10 @@ export class PreferencesService {
     return o1 && o2 ? this.getPreferencesIdentifier(o1) === this.getPreferencesIdentifier(o2) : o1 === o2;
   }
 
+  user(): Observable<EntityResponseType> {
+    return this.http.get<IPreferences>('api/my-preferences', { observe: 'response' });
+  }
+
   addPreferencesToCollectionIfMissing<Type extends Pick<IPreferences, 'id'>>(
     preferencesCollection: Type[],
     ...preferencesToCheck: (Type | null | undefined)[]
