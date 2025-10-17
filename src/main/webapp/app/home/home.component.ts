@@ -1,3 +1,4 @@
+import dayjs from 'dayjs/esm';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -20,6 +21,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   pointsThisWeek: IPointsPerWeek = { points: 0 };
   pointsPercentage?: number;
   preferences!: IPreferences;
+  weekString?: String;
 
   private readonly destroy$ = new Subject<void>();
 
@@ -49,6 +51,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.pointsService.thisWeek().subscribe(response => {
         if (response.body) {
           this.pointsThisWeek = response.body;
+          this.weekString = this.pointsThisWeek.week?.format('MMMM DD');
           this.pointsPercentage = (this.pointsThisWeek.points / 21) * 100;
 
           // // calculate success, warning, or danger

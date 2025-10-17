@@ -1,13 +1,35 @@
 /* ==========================================================================
 Main page styles
 ========================================================================== */
+@use '@carbon/styles/scss/type';
 
-.hipster {
-  display: inline-block;
-  width: 347px;
-  height: 497px;
-  background: url('../../content/images/jhipster_family_member_0.svg') no-repeat center top;
-  background-size: contain;
+.home {
+  font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+
+  .welcome {
+    @include type.type-style('productive-heading-04');
+  }
+
+  .lead {
+    @include type.type-style('body-short-02');
+  }
+
+  h3 {
+    @include type.type-style('productive-heading-03');
+  }
+
+  .weeks-heading {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    align-items: top;
+    justify-content: space-between;
+    padding: 0.25rem;
+
+    a.btn {
+      font-size: 0.85rem;
+    }
+  }
 }
 
 /* wait autoprefixer update to allow simple generation of high pixel density media query */
