@@ -89,7 +89,7 @@
     "ribbon": {
       "dev": "Development"
     },
-    "item-count": "Showing {{first}} - {{second}} of {{total}} items."
+    "item-count": "{{first}} - {{second}} of {{total}} items"
   },
   "entity": {
     "action": {

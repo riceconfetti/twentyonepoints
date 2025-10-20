@@ -155,11 +155,13 @@
             </li>
           </ul>
         </li>
+      </ul>
+      <ul class="nav-utils navbar-nav">
         <li ngbDropdown class="nav-item dropdown pointer" display="dynamic" *ngIf="languages && languages.length > 1">
           <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="languagesnavBarDropdown">
             <span>
-              <!-- <fa-icon icon="flag"></fa-icon> -->
-              <span jhiTranslate="global.menu.language">Language</span>
+              <fa-icon icon="flag"></fa-icon>
+              <!-- <span jhiTranslate="global.menu.language">Language</span> -->
             </span>
           </a>
           <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="languagesnavBarDropdown">
@@ -174,8 +176,6 @@
             </li>
           </ul>
         </li>
-      </ul>
-      <ul class="nav-utils navbar-nav">
         <li
           ngbDropdown
           class="nav-item dropdown pointer account-dropdown"

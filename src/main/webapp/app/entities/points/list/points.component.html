@@ -1,5 +1,5 @@
-<div>
-  <div class="row">
+<div class="card">
+  <div class="row p-4">
     <jhi-alert-error></jhi-alert-error>
     <jhi-alert></jhi-alert>
 
@@ -59,7 +59,7 @@
 
   <div class="table-responsive table-entities" id="entities" *ngIf="points && points.length > 0">
     <table class="table table-striped" aria-describedby="page-heading">
-      <thead>
+      <thead class="thead">
         <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
           <th scope="col" jhiSortBy="id">
             <div class="d-flex">

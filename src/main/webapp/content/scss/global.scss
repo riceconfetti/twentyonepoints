@@ -306,10 +306,13 @@ a {
   white-space: nowrap;
 }
 
-/* Override Bootstrap's default vertical-align: top */
 .table {
-  th,
+  background-color: $gray-90;
+  margin-block: 1rem;
   td {
-    vertical-align: middle !important;
+    padding: 0.4rem;
+  }
+  th {
+    background-color: $gray-80;
   }
 }

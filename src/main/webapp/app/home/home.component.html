@@ -2,12 +2,12 @@
   <!-- <div class="col-md-3">
     <span class="hipster img-fluid rounded"></span>
   </div> -->
-  <jhi-alert></jhi-alert>
+
   <h1 class="welcome mb-2">
     <span jhiTranslate="home.title">Welcome, User!</span>
   </h1>
-
   <p class="lead" jhiTranslate="home.subtitle">21-Points Health is here to track your health and improve your life</p>
+
   <div [ngSwitch]="account !== null">
     <div class="row">
       <div class="alert alert-warning mt-3" *ngSwitchCase="false">
@@ -86,5 +86,6 @@
         </div>
       </div>
     </div>
+    <jhi-alert></jhi-alert>
   </div>
 </div>

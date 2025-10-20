@@ -194,8 +194,8 @@ export class HomeComponent implements OnInit, OnDestroy {
             data: weightValues,
             label: 'Weight',
             fill: true,
-            borderColor: '#ffeb3b',
-            backgroundColor: 'rgba(255,235,59,0.3)',
+            borderColor: 'rgba(15, 98, 254, 1)',
+            backgroundColor: 'rgba(15, 98, 254, .3)',
           },
         ];
         this.weightData = {
