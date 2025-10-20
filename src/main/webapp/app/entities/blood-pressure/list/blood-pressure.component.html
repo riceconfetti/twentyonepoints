@@ -96,7 +96,7 @@
           <td>
             <a [routerLink]="['/blood-pressure', bloodPressure.id, 'view']">{{ bloodPressure.id }}</a>
           </td>
-          <td>{{ bloodPressure.timestamp | formatMediumDate }}</td>
+          <td>{{ bloodPressure.timestamp | formatMediumDatetime }}</td>
           <td>{{ bloodPressure.systolic }}</td>
           <td>{{ bloodPressure.diastolic }}</td>
           <td>

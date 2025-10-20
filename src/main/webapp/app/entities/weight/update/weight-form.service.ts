@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
+import dayjs from 'dayjs/esm';
+import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { IWeight, NewWeight } from '../weight.model';
 
 /**
@@ -14,13 +16,24 @@ type PartialWithRequiredKeyOf<T extends { id: unknown }> = Partial<Omit<T, 'id'>
  */
 type WeightFormGroupInput = IWeight | PartialWithRequiredKeyOf<NewWeight>;
 
-type WeightFormDefaults = Pick<NewWeight, 'id'>;
+/**
+ * Type that converts some properties for forms.
+ */
+type FormValueOf<T extends IWeight | NewWeight> = Omit<T, 'timestamp'> & {
+  timestamp?: string | null;
+};
+
+type WeightFormRawValue = FormValueOf<IWeight>;
+
+type NewWeightFormRawValue = FormValueOf<NewWeight>;
+
+type WeightFormDefaults = Pick<NewWeight, 'id' | 'timestamp'>;
 
 type WeightFormGroupContent = {
-  id: FormControl<IWeight['id'] | NewWeight['id']>;
-  timestamp: FormControl<IWeight['timestamp']>;
-  weight: FormControl<IWeight['weight']>;
-  user: FormControl<IWeight['user']>;
+  id: FormControl<WeightFormRawValue['id'] | NewWeight['id']>;
+  timestamp: FormControl<WeightFormRawValue['timestamp']>;
+  weight: FormControl<WeightFormRawValue['weight']>;
+  user: FormControl<WeightFormRawValue['user']>;
 };
 
 export type WeightFormGroup = FormGroup<WeightFormGroupContent>;
@@ -28,10 +41,10 @@ export type WeightFormGroup = FormGroup<WeightFormGroupContent>;
 @Injectable({ providedIn: 'root' })
 export class WeightFormService {
   createWeightFormGroup(weight: WeightFormGroupInput = { id: null }): WeightFormGroup {
-    const weightRawValue = {
+    const weightRawValue = this.convertWeightToWeightRawValue({
       ...this.getFormDefaults(),
       ...weight,
-    };
+    });
     return new FormGroup<WeightFormGroupContent>({
       id: new FormControl(
         { value: weightRawValue.id, disabled: true },
@@ -47,11 +60,11 @@ export class WeightFormService {
   }
 
   getWeight(form: WeightFormGroup): IWeight | NewWeight {
-    return form.getRawValue() as IWeight | NewWeight;
+    return this.convertWeightRawValueToWeight(form.getRawValue() as WeightFormRawValue | NewWeightFormRawValue);
   }
 
   resetForm(form: WeightFormGroup, weight: WeightFormGroupInput): void {
-    const weightRawValue = { ...this.getFormDefaults(), ...weight };
+    const weightRawValue = this.convertWeightToWeightRawValue({ ...this.getFormDefaults(), ...weight });
     form.reset(
       {
         ...weightRawValue,
@@ -61,8 +74,27 @@ export class WeightFormService {
   }
 
   private getFormDefaults(): WeightFormDefaults {
+    const currentTime = dayjs();
+
     return {
       id: null,
+      timestamp: currentTime,
+    };
+  }
+
+  private convertWeightRawValueToWeight(rawWeight: WeightFormRawValue | NewWeightFormRawValue): IWeight | NewWeight {
+    return {
+      ...rawWeight,
+      timestamp: dayjs(rawWeight.timestamp, DATE_TIME_FORMAT),
+    };
+  }
+
+  private convertWeightToWeightRawValue(
+    weight: IWeight | (Partial<NewWeight> & WeightFormDefaults)
+  ): WeightFormRawValue | PartialWithRequiredKeyOf<NewWeightFormRawValue> {
+    return {
+      ...weight,
+      timestamp: weight.timestamp ? weight.timestamp.format(DATE_TIME_FORMAT) : undefined,
     };
   }
 }

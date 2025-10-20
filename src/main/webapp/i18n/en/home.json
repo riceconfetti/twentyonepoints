@@ -8,6 +8,12 @@
     "points": {
       "getMoving": "No points yet this week, better get moving!"
     },
+    "bloodPressure": {
+      "noReadings": "No blood pressure readings found."
+    },
+    "weight": {
+      "noReadings": "No weight readings found."
+    },
     "question": "If you have any question on JHipster:",
     "link": {
       "homepage": "JHipster homepage",

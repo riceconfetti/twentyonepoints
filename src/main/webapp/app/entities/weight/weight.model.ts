@@ -8,4 +8,9 @@ export interface IWeight {
   user?: Pick<IUser, 'id' | 'login'> | null;
 }
 
+export interface IWeightByPeriod {
+  period: string;
+  readings: Array<IWeight>;
+}
+
 export type NewWeight = Omit<IWeight, 'id'> & { id: null };

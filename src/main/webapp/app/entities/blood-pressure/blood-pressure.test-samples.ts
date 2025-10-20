@@ -13,7 +13,7 @@ export const sampleWithPartialData: IBloodPressure = {
 
 export const sampleWithFullData: IBloodPressure = {
   id: 94935,
-  timestamp: dayjs('2025-10-16'),
+  timestamp: dayjs('2025-10-16T12:10'),
   systolic: 74963,
   diastolic: 18630,
 };

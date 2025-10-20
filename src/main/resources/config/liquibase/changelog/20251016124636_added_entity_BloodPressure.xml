@@ -14,7 +14,7 @@
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="timestamp" type="date">
+            <column name="timestamp" type="${datetimeType}">
                 <constraints nullable="true" />
             </column>
             <column name="systolic" type="integer">
@@ -28,6 +28,7 @@
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
+        <dropDefaultValue tableName="blood_pressure" columnName="timestamp" columnDataType="${datetimeType}"/>
     </changeSet>
 
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->

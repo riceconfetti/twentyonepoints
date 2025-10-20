@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
+import dayjs from 'dayjs/esm';
+import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { IBloodPressure, NewBloodPressure } from '../blood-pressure.model';
 
 /**
@@ -14,14 +16,25 @@ type PartialWithRequiredKeyOf<T extends { id: unknown }> = Partial<Omit<T, 'id'>
  */
 type BloodPressureFormGroupInput = IBloodPressure | PartialWithRequiredKeyOf<NewBloodPressure>;
 
-type BloodPressureFormDefaults = Pick<NewBloodPressure, 'id'>;
+/**
+ * Type that converts some properties for forms.
+ */
+type FormValueOf<T extends IBloodPressure | NewBloodPressure> = Omit<T, 'timestamp'> & {
+  timestamp?: string | null;
+};
+
+type BloodPressureFormRawValue = FormValueOf<IBloodPressure>;
+
+type NewBloodPressureFormRawValue = FormValueOf<NewBloodPressure>;
+
+type BloodPressureFormDefaults = Pick<NewBloodPressure, 'id' | 'timestamp'>;
 
 type BloodPressureFormGroupContent = {
-  id: FormControl<IBloodPressure['id'] | NewBloodPressure['id']>;
-  timestamp: FormControl<IBloodPressure['timestamp']>;
-  systolic: FormControl<IBloodPressure['systolic']>;
-  diastolic: FormControl<IBloodPressure['diastolic']>;
-  user: FormControl<IBloodPressure['user']>;
+  id: FormControl<BloodPressureFormRawValue['id'] | NewBloodPressure['id']>;
+  timestamp: FormControl<BloodPressureFormRawValue['timestamp']>;
+  systolic: FormControl<BloodPressureFormRawValue['systolic']>;
+  diastolic: FormControl<BloodPressureFormRawValue['diastolic']>;
+  user: FormControl<BloodPressureFormRawValue['user']>;
 };
 
 export type BloodPressureFormGroup = FormGroup<BloodPressureFormGroupContent>;
@@ -29,10 +42,10 @@ export type BloodPressureFormGroup = FormGroup<BloodPressureFormGroupContent>;
 @Injectable({ providedIn: 'root' })
 export class BloodPressureFormService {
   createBloodPressureFormGroup(bloodPressure: BloodPressureFormGroupInput = { id: null }): BloodPressureFormGroup {
-    const bloodPressureRawValue = {
+    const bloodPressureRawValue = this.convertBloodPressureToBloodPressureRawValue({
       ...this.getFormDefaults(),
       ...bloodPressure,
-    };
+    });
     return new FormGroup<BloodPressureFormGroupContent>({
       id: new FormControl(
         { value: bloodPressureRawValue.id, disabled: true },
@@ -49,11 +62,11 @@ export class BloodPressureFormService {
   }
 
   getBloodPressure(form: BloodPressureFormGroup): IBloodPressure | NewBloodPressure {
-    return form.getRawValue() as IBloodPressure | NewBloodPressure;
+    return this.convertBloodPressureRawValueToBloodPressure(form.getRawValue() as BloodPressureFormRawValue | NewBloodPressureFormRawValue);
   }
 
   resetForm(form: BloodPressureFormGroup, bloodPressure: BloodPressureFormGroupInput): void {
-    const bloodPressureRawValue = { ...this.getFormDefaults(), ...bloodPressure };
+    const bloodPressureRawValue = this.convertBloodPressureToBloodPressureRawValue({ ...this.getFormDefaults(), ...bloodPressure });
     form.reset(
       {
         ...bloodPressureRawValue,
@@ -63,8 +76,29 @@ export class BloodPressureFormService {
   }
 
   private getFormDefaults(): BloodPressureFormDefaults {
+    const currentTime = dayjs();
+
     return {
       id: null,
+      timestamp: currentTime,
+    };
+  }
+
+  private convertBloodPressureRawValueToBloodPressure(
+    rawBloodPressure: BloodPressureFormRawValue | NewBloodPressureFormRawValue
+  ): IBloodPressure | NewBloodPressure {
+    return {
+      ...rawBloodPressure,
+      timestamp: dayjs(rawBloodPressure.timestamp, DATE_TIME_FORMAT),
+    };
+  }
+
+  private convertBloodPressureToBloodPressureRawValue(
+    bloodPressure: IBloodPressure | (Partial<NewBloodPressure> & BloodPressureFormDefaults)
+  ): BloodPressureFormRawValue | PartialWithRequiredKeyOf<NewBloodPressureFormRawValue> {
+    return {
+      ...bloodPressure,
+      timestamp: bloodPressure.timestamp ? bloodPressure.timestamp.format(DATE_TIME_FORMAT) : undefined,
     };
   }
 }

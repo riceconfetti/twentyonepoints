@@ -8,9 +8,23 @@
   </h1>
 
   <p class="lead" jhiTranslate="home.subtitle">21-Points Health is here to track your health and improve your life</p>
-  <div class="row">
-    <div class="col-md-12 card jh-card">
-      <div [ngSwitch]="account !== null">
+  <div [ngSwitch]="account !== null">
+    <div class="row">
+      <div class="alert alert-warning mt-3" *ngSwitchCase="false">
+        <span jhiTranslate="global.messages.info.authenticated.prefix">If you want to </span>
+        <a class="alert-link" (click)="login()" jhiTranslate="global.messages.info.authenticated.link">sign in</a
+        ><span jhiTranslate="global.messages.info.authenticated.suffix"
+          >, you can try the default accounts:<br />- Administrator (login="admin" and password="admin") <br />- User (login="user" and
+          password="user").</span
+        >
+      </div>
+
+      <div class="alert alert-warning" *ngSwitchCase="false">
+        <span jhiTranslate="global.messages.info.register.noaccount">You don't have an account yet?</span>&nbsp;
+        <a class="alert-link" routerLink="account/register" jhiTranslate="global.messages.info.register.link">Register a new account</a>
+      </div>
+
+      <div class="col-md-12 card jh-card" *ngSwitchCase="true">
         <div class="weeks-heading">
           <h3>Points for the week of {{ weekString }}</h3>
 
@@ -26,35 +40,49 @@
             </ngb-alert>
           </div>
         </div>
-
-        <div class="alert alert-warning" *ngSwitchCase="false">
-          <span jhiTranslate="global.messages.info.authenticated.prefix">If you want to </span>
-          <a class="alert-link" (click)="login()" jhiTranslate="global.messages.info.authenticated.link">sign in</a
-          ><span jhiTranslate="global.messages.info.authenticated.suffix"
-            >, you can try the default accounts:<br />- Administrator (login="admin" and password="admin") <br />- User (login="user" and
-            password="user").</span
-          >
-        </div>
-
-        <div class="alert alert-warning" *ngSwitchCase="false">
-          <span jhiTranslate="global.messages.info.register.noaccount">You don't have an account yet?</span>&nbsp;
-          <a class="alert-link" routerLink="account/register" jhiTranslate="global.messages.info.register.link">Register a new account</a>
-        </div>
       </div>
     </div>
-    <div class="col-md card jh-card">
-      <div [ngSwitch]="account !== null">
+    <div class="row">
+      <div class="col-md card jh-card" *ngSwitchCase="true">
         <div class="weeks-heading">
           <h3>Blood Pressure</h3>
           <a [routerLink]="['/blood-pressure/new']" class="btn btn-primary m-0 mb-1 text-white">Add Blood Pressure</a>
         </div>
+        <div class="graph">
+          <canvas
+            baseChart
+            *ngIf="bpReadings && bpReadings.readings.length"
+            height="125"
+            [type]="'line'"
+            [data]="bpData"
+            [options]="bpOptions"
+          >
+          </canvas>
+
+          <ngb-alert [dismissible]="false" [hidden]="bpReadings && bpReadings.readings.length">
+            <span jhiTranslate="home.bloodPressure.noReadings"> No blood pressure readings found.</span>
+          </ngb-alert>
+        </div>
       </div>
-    </div>
-    <div class="col-md card jh-card">
-      <div [ngSwitch]="account !== null">
+      <div class="col-md card jh-card" *ngSwitchCase="true">
         <div class="weeks-heading">
           <h3>Weight</h3>
-          <a [routerLink]="['/weight/new']" class="btn btn-primary m-0 mb-1 text-white">Add weight</a>
+          <a [routerLink]="['/weight/new']" class="btn btn-primary m-0 mb-1 text-white">Add Weight</a>
+        </div>
+        <div class="graph">
+          <canvas
+            baseChart
+            *ngIf="weights && weights.readings.length"
+            height="125"
+            [type]="'line'"
+            [data]="weightData"
+            [options]="weightOptions"
+          >
+          </canvas>
+
+          <ngb-alert [dismissible]="false" [hidden]="weights && weights.readings.length">
+            <span jhiTranslate="home.weight.noReadings"> No weight readings found.</span>
+          </ngb-alert>
         </div>
       </div>
     </div>

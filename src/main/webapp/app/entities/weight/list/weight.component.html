@@ -88,7 +88,7 @@
           <td>
             <a [routerLink]="['/weight', weight.id, 'view']">{{ weight.id }}</a>
           </td>
-          <td>{{ weight.timestamp | formatMediumDate }}</td>
+          <td>{{ weight.timestamp | formatMediumDatetime }}</td>
           <td>{{ weight.weight }}</td>
           <td>
             {{ weight.user?.login }}

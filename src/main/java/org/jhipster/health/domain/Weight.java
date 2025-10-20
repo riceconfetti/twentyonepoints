@@ -1,7 +1,7 @@
 package org.jhipster.health.domain;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -25,7 +25,7 @@ public class Weight implements Serializable {
     private Long id;
 
     @Column(name = "timestamp")
-    private LocalDate timestamp;
+    private ZonedDateTime timestamp;
 
     @Column(name = "weight")
     private Float weight;
@@ -48,16 +48,16 @@ public class Weight implements Serializable {
         this.id = id;
     }
 
-    public LocalDate getTimestamp() {
+    public ZonedDateTime getTimestamp() {
         return this.timestamp;
     }
 
-    public Weight timestamp(LocalDate timestamp) {
+    public Weight timestamp(ZonedDateTime timestamp) {
         this.setTimestamp(timestamp);
         return this;
     }
 
-    public void setTimestamp(LocalDate timestamp) {
+    public void setTimestamp(ZonedDateTime timestamp) {
         this.timestamp = timestamp;
     }
 

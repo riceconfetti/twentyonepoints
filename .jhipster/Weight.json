@@ -3,7 +3,7 @@
   "fields": [
     {
       "fieldName": "timestamp",
-      "fieldType": "LocalDate"
+      "fieldType": "ZonedDateTime"
     },
     {
       "fieldName": "weight",

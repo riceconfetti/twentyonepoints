@@ -5,11 +5,10 @@ import { map } from 'rxjs/operators';
 import dayjs from 'dayjs/esm';
 
 import { isPresent } from 'app/core/util/operators';
-import { DATE_FORMAT } from 'app/config/input.constants';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
 import { SearchWithPagination } from 'app/core/request/request.model';
-import { IWeight, NewWeight } from '../weight.model';
+import { IWeight, IWeightByPeriod, NewWeight } from '../weight.model';
 
 export type PartialUpdateWeight = Partial<IWeight> & Pick<IWeight, 'id'>;
 
@@ -109,7 +108,7 @@ export class WeightService {
   protected convertDateFromClient<T extends IWeight | NewWeight | PartialUpdateWeight>(weight: T): RestOf<T> {
     return {
       ...weight,
-      timestamp: weight.timestamp?.format(DATE_FORMAT) ?? null,
+      timestamp: weight.timestamp?.toJSON() ?? null,
     };
   }
 
@@ -130,5 +129,9 @@ export class WeightService {
     return res.clone({
       body: res.body ? res.body.map(item => this.convertDateFromServer(item)) : null,
     });
+  }
+
+  last30Days(): Observable<HttpResponse<IWeightByPeriod>> {
+    return this.http.get<IWeightByPeriod>('api/weight-by-days/30', { observe: 'response' });
   }
 }

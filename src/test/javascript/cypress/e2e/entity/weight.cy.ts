@@ -160,7 +160,7 @@ describe('Weight e2e test', () => {
     });
 
     it('should create an instance of Weight', () => {
-      cy.get(`[data-cy="timestamp"]`).type('2025-10-15').blur().should('have.value', '2025-10-15');
+      cy.get(`[data-cy="timestamp"]`).type('2025-10-15T03:40').blur().should('have.value', '2025-10-15T03:40');
 
       cy.get(`[data-cy="weight"]`).type('90727').should('have.value', '90727');
 

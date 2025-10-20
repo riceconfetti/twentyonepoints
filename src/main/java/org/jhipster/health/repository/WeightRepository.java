@@ -1,7 +1,9 @@
 package org.jhipster.health.repository;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.jhipster.health.domain.BloodPressure;
 import org.jhipster.health.domain.Weight;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,4 +42,14 @@ public interface WeightRepository extends JpaRepository<Weight, Long> {
 
     @Query("select weight from Weight weight left join fetch weight.user where weight.id =:id")
     Optional<Weight> findOneWithToOneRelationships(@Param("id") Long id);
+
+    List<Weight> findAllByTimestampBetweenAndUserLoginOrderByTimestampAsc(ZonedDateTime firstDate, ZonedDateTime secondDate, String login);
+
+    Page<Weight> findAllByOrderByTimestampDesc(Pageable pageable);
+
+    List<Weight> findAllByTimestampBetweenAndUserLoginOrderByTimestampDesc(
+        ZonedDateTime atStartOfDay,
+        ZonedDateTime atStartOfDay1,
+        String orElse
+    );
 }

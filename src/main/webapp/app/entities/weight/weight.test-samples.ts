@@ -8,12 +8,12 @@ export const sampleWithRequiredData: IWeight = {
 
 export const sampleWithPartialData: IWeight = {
   id: 53022,
-  timestamp: dayjs('2025-10-15'),
+  timestamp: dayjs('2025-10-15T05:25'),
 };
 
 export const sampleWithFullData: IWeight = {
   id: 24033,
-  timestamp: dayjs('2025-10-15'),
+  timestamp: dayjs('2025-10-15T05:06'),
   weight: 55812,
 };
 

@@ -10,6 +10,12 @@ import { PointsService } from '../entities/points/service/points.service';
 import { IPointsPerWeek } from '../entities/points/points.model';
 import { IPreferences } from 'app/entities/preferences/preferences.model';
 import { PreferencesService } from 'app/entities/preferences/service/preferences.service';
+import { BloodPressureService } from '../entities/blood-pressure/service/blood-pressure.service';
+import { IBloodPressureByPeriod, IBloodPressure } from 'app/entities/blood-pressure/blood-pressure.model';
+
+import { ChartConfiguration, ChartOptions } from 'chart.js';
+import { IWeight, IWeightByPeriod } from 'app/entities/weight/weight.model';
+import { WeightService } from 'app/entities/weight/service/weight.service';
 
 @Component({
   selector: 'jhi-home',
@@ -22,6 +28,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   pointsPercentage?: number;
   preferences!: IPreferences;
   weekString?: String;
+  bpReadings!: IBloodPressureByPeriod;
+  bpOptions!: ChartOptions<'line'>;
+  bpData!: ChartConfiguration<'line'>['data'];
+  weights!: IWeightByPeriod;
+  weightOptions!: ChartOptions<'line'>;
+  weightData!: ChartConfiguration<'line'>['data'];
 
   private readonly destroy$ = new Subject<void>();
 
@@ -29,7 +41,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     private accountService: AccountService,
     private router: Router,
     private pointsService: PointsService,
-    private preferencesService: PreferencesService
+    private preferencesService: PreferencesService,
+    private bloodPressureService: BloodPressureService,
+    private weightService: WeightService
   ) {}
 
   ngOnInit(): void {
@@ -64,6 +78,141 @@ export class HomeComponent implements OnInit, OnDestroy {
           // }
         }
       });
+    });
+
+    // Get blood pressure readings for the last 30 days
+    this.bloodPressureService.last30Days().subscribe((bpReadings: any) => {
+      bpReadings = bpReadings.body;
+      this.bpReadings = bpReadings;
+
+      if (bpReadings.readings.length) {
+        this.bpOptions = {
+          plugins: {
+            legend: { display: true },
+            title: {
+              display: true,
+              text: bpReadings.period,
+            },
+          },
+          scales: {
+            y: {
+              beginAtZero: false,
+            },
+            x: {
+              beginAtZero: false,
+            },
+          },
+        };
+        const labels: any = [];
+        const systolics: any = [];
+        const diastolics: any = [];
+        const upperValues: any = [];
+        const lowerValues: any = [];
+        bpReadings.readings.forEach((item: IBloodPressure) => {
+          const timestamp = dayjs(item.timestamp).format('MMM DD');
+          labels.push(timestamp);
+          systolics.push({
+            x: timestamp,
+            y: item.systolic,
+          });
+          diastolics.push({
+            x: timestamp,
+            y: item.diastolic,
+          });
+          upperValues.push(item.systolic);
+          lowerValues.push(item.diastolic);
+        });
+        const datasets = [
+          {
+            data: systolics,
+            label: 'Systolic',
+          },
+          {
+            data: diastolics,
+            label: 'Diastolic',
+          },
+        ];
+        this.bpData = {
+          labels,
+          datasets,
+        };
+        // set y scale to be 10 more than max and min
+        this.bpOptions.scales = {
+          y: {
+            max: Math.max(...upperValues) + 10,
+            min: Math.min(...lowerValues) - 10,
+          },
+        };
+        // show both systolic and diastolic on hover
+        this.bpOptions.interaction = {
+          mode: 'index',
+          intersect: false,
+        };
+      } else {
+        this.bpReadings.readings = [];
+      }
+      console.log(this.bpReadings);
+    });
+
+    this.weightService.last30Days().subscribe((weights: any) => {
+      weights = weights.body;
+      this.weights = weights;
+
+      if (weights.readings.length) {
+        this.weightOptions = {
+          plugins: {
+            legend: { display: true },
+            title: {
+              display: true,
+              text: this.weights.period,
+            },
+          },
+          scales: {
+            y: {
+              beginAtZero: false,
+            },
+            x: {
+              beginAtZero: false,
+            },
+          },
+        };
+        const labels: any = [];
+        const weightValues: any = [];
+        const values: any = [];
+        weights.readings.forEach((item: IWeight) => {
+          const timestamp = dayjs(item.timestamp).format('MMM DD');
+          labels.push(timestamp);
+          weightValues.push({
+            x: timestamp,
+            y: item.weight,
+          });
+
+          values.push(item.weight);
+        });
+        const datasets = [
+          {
+            data: weightValues,
+            label: 'Weight',
+            fill: true,
+            borderColor: '#ffeb3b',
+            backgroundColor: 'rgba(255,235,59,0.3)',
+          },
+        ];
+        this.weightData = {
+          labels,
+          datasets,
+        };
+        // set y scale to be 10 more than max and min
+        this.weightOptions.scales = {
+          y: {
+            max: Math.max(...values) + 10,
+            min: Math.min(...values) - 10,
+          },
+        };
+      } else {
+        this.weights.readings = [];
+      }
+      console.log(this.weights);
     });
   }
 

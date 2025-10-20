@@ -160,7 +160,7 @@ describe('BloodPressure e2e test', () => {
     });
 
     it('should create an instance of BloodPressure', () => {
-      cy.get(`[data-cy="timestamp"]`).type('2025-10-15').blur().should('have.value', '2025-10-15');
+      cy.get(`[data-cy="timestamp"]`).type('2025-10-15T20:23').blur().should('have.value', '2025-10-15T20:23');
 
       cy.get(`[data-cy="systolic"]`).type('88377').should('have.value', '88377');
 

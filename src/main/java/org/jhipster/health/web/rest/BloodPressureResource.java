@@ -4,6 +4,7 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -12,7 +13,9 @@ import java.util.stream.StreamSupport;
 import org.jhipster.health.domain.BloodPressure;
 import org.jhipster.health.repository.BloodPressureRepository;
 import org.jhipster.health.repository.search.BloodPressureSearchRepository;
+import org.jhipster.health.security.SecurityUtils;
 import org.jhipster.health.web.rest.errors.BadRequestAlertException;
+import org.jhipster.health.web.rest.vm.BloodPressureByPeriod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -237,5 +240,25 @@ public class BloodPressureResource {
         Page<BloodPressure> page = bloodPressureSearchRepository.search(query, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * {@code GET  /bp-by-days/:days} : get all the blood pressure readings by last x days.
+     *
+     * @param days the number of days.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the {@link BloodPressureByPeriod}.
+     */
+    @RequestMapping(value = "/bp-by-days/{days}")
+    public ResponseEntity<BloodPressureByPeriod> getByDays(@PathVariable int days) {
+        ZonedDateTime rightNow = ZonedDateTime.now();
+        ZonedDateTime daysAgo = rightNow.minusDays(days);
+
+        List<BloodPressure> readings = bloodPressureRepository.findAllByTimestampBetweenAndUserLoginOrderByTimestampAsc(
+            daysAgo,
+            rightNow,
+            SecurityUtils.getCurrentUserLogin().orElse("")
+        );
+        BloodPressureByPeriod response = new BloodPressureByPeriod("Last " + days + " Days", readings);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
-import { DATE_FORMAT } from 'app/config/input.constants';
 import { IWeight } from '../weight.model';
 import { sampleWithRequiredData, sampleWithNewData, sampleWithPartialData, sampleWithFullData } from '../weight.test-samples';
 
@@ -9,7 +8,7 @@ import { WeightService, RestWeight } from './weight.service';
 
 const requireRestSample: RestWeight = {
   ...sampleWithRequiredData,
-  timestamp: sampleWithRequiredData.timestamp?.format(DATE_FORMAT),
+  timestamp: sampleWithRequiredData.timestamp?.toJSON(),
 };
 
 describe('Weight Service', () => {

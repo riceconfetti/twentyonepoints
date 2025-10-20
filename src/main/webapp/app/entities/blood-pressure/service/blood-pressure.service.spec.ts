@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
-import { DATE_FORMAT } from 'app/config/input.constants';
 import { IBloodPressure } from '../blood-pressure.model';
 import { sampleWithRequiredData, sampleWithNewData, sampleWithPartialData, sampleWithFullData } from '../blood-pressure.test-samples';
 
@@ -9,7 +8,7 @@ import { BloodPressureService, RestBloodPressure } from './blood-pressure.servic
 
 const requireRestSample: RestBloodPressure = {
   ...sampleWithRequiredData,
-  timestamp: sampleWithRequiredData.timestamp?.format(DATE_FORMAT),
+  timestamp: sampleWithRequiredData.timestamp?.toJSON(),
 };
 
 describe('BloodPressure Service', () => {

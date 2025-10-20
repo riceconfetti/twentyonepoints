@@ -1,7 +1,7 @@
 package org.jhipster.health.domain;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -25,7 +25,7 @@ public class BloodPressure implements Serializable {
     private Long id;
 
     @Column(name = "timestamp")
-    private LocalDate timestamp;
+    private ZonedDateTime timestamp;
 
     @Column(name = "systolic")
     private Integer systolic;
@@ -37,6 +37,17 @@ public class BloodPressure implements Serializable {
     private User user;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
+    public BloodPressure(ZonedDateTime timestamp, int systolic, int diastolic, User user) {
+        this.timestamp = timestamp;
+        this.systolic = systolic;
+        this.diastolic = diastolic;
+        this.user = user;
+    }
+
+    public BloodPressure() {
+        //TODO Auto-generated constructor stub
+    }
 
     public Long getId() {
         return this.id;
@@ -51,16 +62,16 @@ public class BloodPressure implements Serializable {
         this.id = id;
     }
 
-    public LocalDate getTimestamp() {
+    public ZonedDateTime getTimestamp() {
         return this.timestamp;
     }
 
-    public BloodPressure timestamp(LocalDate timestamp) {
+    public BloodPressure timestamp(ZonedDateTime timestamp) {
         this.setTimestamp(timestamp);
         return this;
     }
 
-    public void setTimestamp(LocalDate timestamp) {
+    public void setTimestamp(ZonedDateTime timestamp) {
         this.timestamp = timestamp;
     }
 
